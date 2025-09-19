@@ -51,7 +51,11 @@ MAJORPROJECT/
    node app.js
    ```
 5. **Visit:**
+<<<<<<< HEAD
    - [http://localhost:3000/listings](http://localhost:3000/listings)
+=======
+   - [http://localhost:3000/listings](https://nxtstay.onrender.com/Listings)
+>>>>>>> 0f365615c0b1336ced6b976bbbf493d998666337
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
