@@ -4,7 +4,7 @@ if (process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/NxtStay";
 // const mongo_URL = "mongodb://127.0.0.1:27017/NxtStay";
 
 const path = require("path");
@@ -30,11 +30,14 @@ main()
     console.log("Connected to DB");
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Database connection error:", err);
   });
 
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect(dbUrl, {
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+  });
 }
 
 app.set("view engine","ejs");
@@ -53,16 +56,16 @@ const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60, // time in seconds
   crypto: {
-    secret:process.env.SECRET,
+    secret: process.env.SECRET || "fallbacksecret",
   } 
 });
 
-store.on("error", ()=>{
-  console.log("Session store error"+ err);
+store.on("error", (err) => {
+  console.log("Session store error: " + err);
 });
 const options = {
   store,
-  secret: process.env.SECRET ,
+  secret: process.env.SECRET || "fallbacksecret",
   resave: false,
   saveUninitialized: false, 
   cookie: {
@@ -86,7 +89,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.Curruser = req.user;
+  res.locals.Curruser = req.user || null;
   next();
 });
 
@@ -103,7 +106,7 @@ app.use((req, res, next) => {
 //   }
 // });
 
-app.use("/Listings",Listings);
+app.use("/listings",Listings);
 app.use("/listings/:id/reviews",reviews);
 app.use("/",UserRoute);
 

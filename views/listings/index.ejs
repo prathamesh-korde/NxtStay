@@ -107,7 +107,7 @@
  
     <div class="row row-cols-lg-3 row-cols-mid-3 row-cols-sm-1 row-cols-xs-1 mt-3">
     <% for(let listing of allListings) { %>
-     <a href="/Listings/<%=listing._id %>" class="listing-links">
+     <a href="/listings/<%=listing._id %>" class="listing-links">
     <div class="card  col isting-card" >
   <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing image" style="height: 20rem;">
   <div class="card-img-overlay">
@@ -134,7 +134,7 @@
 for (let filter of filters) {
   filter.addEventListener("click", () => {
     const category = filter.querySelector("p").innerText.trim();
-    window.location.href = `/Listings?category=${(category)}`;
+    window.location.href = `/listings?category=${(category)}`;
   });
 }
   const form_switch = document.getElementById("flexSwitchCheckDefault");
